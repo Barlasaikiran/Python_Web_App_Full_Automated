@@ -1,0 +1,24 @@
+.venv/
+venv/
+env/
+
+__pycache__/
+*.py[cod]
+.env
+.pytest_cache/
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+
+# Keep Terraform configuration and dependency lock file
+!.terraform.lock.hcl
+
+# IDE
+.vscode/
+.idea/

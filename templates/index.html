@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python Web App | Azure</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f7ff;
+            color: #172554;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+
+        nav {
+            background: linear-gradient(
+                110deg,
+                #0891b2,
+                #4f46e5,
+                #9333ea
+            );
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-right a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .online-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 7px;
+        }
+
+        /* Main content */
+
+        main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        /* Hero banner */
+
+        .hero {
+            background: linear-gradient(
+                115deg,
+                #dbeafe,
+                #ede9fe,
+                #fce7f3
+            );
+            border-radius: 24px;
+            padding: 55px 45px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: -75px;
+            top: -90px;
+            background: rgba(168, 85, 247, 0.15);
+            border-radius: 50%;
+        }
+
+        .hero-label {
+            color: #6366f1;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(
+                90deg,
+                #2563eb,
+                #9333ea,
+                #db2777
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: #475569;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 650px;
+        }
+
+        .hero-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 24px;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            background: linear-gradient(
+                100deg,
+                #2563eb,
+                #9333ea
+            );
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Feature cards */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.1);
+        }
+
+        .blue-card {
+            border-top: 5px solid #3b82f6;
+        }
+
+        .green-card {
+            border-top: 5px solid #10b981;
+        }
+
+        .purple-card {
+            border-top: 5px solid #8b5cf6;
+        }
+
+        .icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            border-radius: 17px;
+            margin-bottom: 22px;
+        }
+
+        .blue-icon {
+            background: #dbeafe;
+        }
+
+        .green-icon {
+            background: #d1fae5;
+        }
+
+        .purple-icon {
+            background: #ede9fe;
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-bottom: 14px;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.8;
+            margin-bottom: 22px;
+        }
+
+        .card ul {
+            list-style: none;
+            margin: 16px 0 22px;
+        }
+
+        .card li {
+            color: #475569;
+            padding: 7px 0;
+        }
+
+        .card li::before {
+            content: "✓";
+            color: #059669;
+            font-weight: 800;
+            margin-right: 10px;
+        }
+
+        .tech-list li::before {
+            content: "●";
+            color: #8b5cf6;
+        }
+
+        .card-button {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            background: #2563eb;
+            cursor: pointer;
+            border: none;
+        }
+
+        .green-card .card-button {
+            background: #059669;
+        }
+
+        .purple-card .card-button {
+            background: #7c3aed;
+        }
+
+        /* Health section */
+
+        .health-panel {
+            background: linear-gradient(
+                110deg,
+                #d1fae5,
+                #ecfdf5,
+                #dbeafe
+            );
+            padding: 25px 30px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            border: 1px solid #a7f3d0;
+        }
+
+        .health-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .health-icon {
+            font-size: 28px;
+            background: #059669;
+            color: white;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        .health-panel h2 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .health-panel p {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .health-right {
+            text-align: right;
+        }
+
+        .health-status {
+            display: inline-block;
+            color: #047857;
+            background: #a7f3d0;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        #health-message {
+            min-height: 18px;
+        }
+
+        /* Footer */
+
+        footer {
+            margin-top: 20px;
+            background: #172554;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 14px;
+        }
+
+        footer span {
+            color: #a78bfa;
+            font-weight: 700;
+        }
+
+        /* Responsive layout */
+
+        @media (max-width: 850px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero {
+                padding: 40px 28px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 20px;
+            }
+
+            .nav-right {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            main {
+                padding: 22px 15px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 35px 23px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .health-right {
+                text-align: left;
+            }
+
+            .health-panel {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav>
+        <div class="logo">🐍 Python Web App</div>
+
+        <div class="nav-right">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#health">Health</a>
+
+            <div class="online-badge">
+                <span class="dot"></span>
+                Online
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- Hero banner -->
+
+        <section class="hero" id="home">
+            <div class="hero-label">Welcome to your application</div>
+
+            <h1>
+                Build Something <br>
+                <span class="gradient-text">Amazing with Python</span>
+            </h1>
+
+            <p>
+                Welcome to my colorful Python Flask application!
+                This application is hosted on Azure App Service
+                and deployed automatically using Azure DevOps CI/CD.
+            </p>
+
+            <a href="#features" class="hero-button">
+                Explore Application →
+            </a>
+        </section>
+
+        <!-- Feature cards -->
+
+        <section class="cards" id="features">
+
+            <article class="card blue-card">
+                <div class="icon blue-icon">💻</div>
+
+                <h2>Welcome</h2>
+
+                <p>
+                    Your Python application is running on Azure Web App.
+                    Explore the features and learn about the technology
+                    behind this application.
+                </p>
+
+                <a href="#health" class="card-button">
+                    View Status →
+                </a>
+            </article>
+
+            <article class="card green-card">
+                <div class="icon green-icon">🚀</div>
+
+                <h2>Key Features</h2>
+
+                <ul>
+                    <li>Python Flask Framework</li>
+                    <li>Azure App Service Hosting</li>
+                    <li>Azure DevOps CI/CD Pipeline</li>
+                    <li>Automated Application Deployment</li>
+                </ul>
+
+                <a href="#health" class="card-button">
+                    Check Health →
+                </a>
+            </article>
+
+            <article class="card purple-card">
+                <div class="icon purple-icon">⚙️</div>
+
+                <h2>Technology Stack</h2>
+
+                <ul class="tech-list">
+                    <li>Python</li>
+                    <li>Flask</li>
+                    <li>Gunicorn</li>
+                    <li>Azure App Service</li>
+                    <li>Azure DevOps</li>
+                </ul>
+
+                <a
+                    href="https://learn.microsoft.com/en-us/azure/app-service/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="card-button"
+                >
+                    Learn More →
+                </a>
+            </article>
+
+        </section>
+
+        <!-- Health check -->
+
+        <section class="health-panel" id="health">
+
+            <div class="health-left">
+                <div class="health-icon">♥</div>
+
+                <div>
+                    <h2>Application Health</h2>
+
+                    <p id="health-message">
+                        Checking application status...
+                    </p>
+                </div>
+            </div>
+
+            <div class="health-right">
+                <div class="health-status" id="health-status">
+                    Checking...
+                </div>
+
+                <p id="health-time">
+                    Please wait
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+
+    <footer>
+        Powered by <span>Python Flask</span>
+        &nbsp; | &nbsp;
+        Hosted on <span>Azure App Service</span>
+        &nbsp; | &nbsp;
+        CI/CD with <span>Azure DevOps</span>
+        <br><br>
+        Built with ❤️ for learning and deployment.
+    </footer>
+
+    <script>
+        async function checkHealth() {
+            const status = document.getElementById("health-status");
+            const message = document.getElementById("health-message");
+            const time = document.getElementById("health-time");
+
+            try {
+                const response = await fetch("/health");
+
+                if (!response.ok) {
+                    throw new Error("Health check failed");
+                }
+
+                const data = await response.json();
+
+                status.textContent = "● Healthy";
+                status.style.background = "#a7f3d0";
+                status.style.color = "#047857";
+
+                message.textContent =
+                    data.application + " is running successfully.";
+
+                time.textContent =
+                    "Last checked: " + new Date().toLocaleTimeString();
+
+            } catch (error) {
+                status.textContent = "● Unavailable";
+                status.style.background = "#fee2e2";
+                status.style.color = "#b91c1c";
+
+                message.textContent =
+                    "Unable to verify application health.";
+
+                time.textContent = "Please try again later.";
+            }
+        }
+
+        checkHealth();
+
+        // Refresh health status every 30 seconds.
+        setInterval(checkHealth, 30000);
+    </script>
+
+</body>
+</html>
