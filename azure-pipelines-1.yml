@@ -5,12 +5,14 @@ variables:
   vmImage: ubuntu-latest
   serviceConnection: HDFC-Manual
   acrServiceConnection: acrSerCon
+  imageName: pythonapp
+  imageTag: $(Build.BuildId)
 
 
 
 stages:
 
-  - stage: Infra Build
+  - stage: InfraBuild
     displayName: Infra Build
     jobs:
       - job: InfraCreation
@@ -42,8 +44,8 @@ stages:
 
 
 
-  - stage: Docker Build
-    dependsOn: Infra Build
+  - stage: DockerBuild
+    dependsOn: InfraBuild
     displayName: DockerBuildandPush
     jobs:
       - job: DockerBuildJob
@@ -54,3 +56,6 @@ stages:
               repository: 'acrRepo'
               command: 'buildAndPush'
               Dockerfile: Python_Web_App/Dockerfile
+              tags: |
+                $(imageTag)
+                latest
