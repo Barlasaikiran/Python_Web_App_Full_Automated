@@ -1,0 +1,69 @@
+trigger:
+  - main
+variables:
+  serviceConnection: HDFC-Manual
+  vmImage: ubuntu-latest
+  ResourceGroup: acrRg
+  storageAccount: pythonstorage12
+  containerReg: tfstate
+  Dockerfile: Python_Web_App\Dockerfile
+  imageTag: $(Build.BuildId)
+  acrServiceConnection: acrSerCon123
+  repo: pythonApp
+  acrLoginServer: acrregistry123.azurecr.io
+
+
+#=====================Terraform Stage===================================
+
+
+stages:
+  - stage: InfraCreation
+    jobs:
+      - job: TerraformJob
+        steps:
+          - checkout: self
+      
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+          
+          - task: TerraformTask@5
+            displayName: Terraform Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Root'
+              backendAzureRmResourceGroupName: 'acrRg'
+              backendAzureRmStorageAccountName: 'pythonstorage12'
+              backendAzureRmContainerName: 'tfsate'
+              backendAzureRmKey: 'terraform.tfstate'
+
+
+          - task: TerraformTask@5
+            displayName: Terraform Apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Root'
+              commandOptions: '--auto --approve'
+              environmentServiceNameAzureRM: $(serviceConnection)
+
+
+#=================== Docker Build and Push===============================
+
+  - stage: DockerBuildandPush
+    dependsOn: InfraCreation
+    jobs:
+      - job: DockerBuildandPush
+        
+        steps:
+          - checkout: self
+          - task: Docker@2
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: '$(repo)'
+              command: 'buildAndPush'
+              Dockerfile: $(Dockerfile)
+              tags: |
+                $(imageTag)
+                latest
