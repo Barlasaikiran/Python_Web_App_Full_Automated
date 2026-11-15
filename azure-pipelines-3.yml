@@ -8,7 +8,7 @@ variables:
   containerReg: tfstate
   Dockerfile: Python_Web_App\Dockerfile
   imageTag: $(Build.BuildId)
-  acrServiceConnection: acrSerCon123
+  acrServiceConnection: acrSerCon12345
   repo: pythonApp
   acrLoginServer: acrregistry123.azurecr.io
 
@@ -30,7 +30,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/Root'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
               backendServiceArm: $(serviceConnection)
               backendAzureRmResourceGroupName: 'acrRg'
               backendAzureRmStorageAccountName: 'pythonstorage12'
