@@ -1,0 +1,61 @@
+trigger:
+  - main
+
+variables:
+  vmImage: ubuntu-latest
+  serviceConnection: HDFC-Manual
+  acrServiceConnection: acrSerCon
+  imageName: pythonapp
+  imageTag: $(Build.BuildId)
+
+
+
+stages:
+
+  - stage: InfraBuild
+    displayName: Infra Build
+    jobs:
+      - job: InfraCreation
+        steps:
+          - checkout: self
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Root'
+              backendServiceArm: $(serviceConnection)
+              backendAzureRmResourceGroupName: 'backend-python-rg'
+              backendAzureRmStorageAccountName: 'backendpython1'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'terraform.tfstate'
+          
+    
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/Root'
+              environmentServiceNameAzureRM: 'HDFC-Manual'
+            
+
+
+
+  - stage: DockerBuild
+    dependsOn: InfraBuild
+    displayName: DockerBuildandPush
+    jobs:
+      - job: DockerBuildJob
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: $(acrServiceConnection)
+              repository: 'acrRepo'
+              command: 'buildAndPush'
+              Dockerfile: Python_Web_App/Dockerfile
+              tags: |
+                $(imageTag)
+                latest
